@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     ALGORITHM: str = "RS256"
     PUBLIC_KEY_PATH: Path = security.BASE_DIR / 'keys/public.pem'
     PRIVATE_KEY_PATH: Path = security.BASE_DIR / 'keys/private.pem'
+    DEBUG: bool = True
 
     class Config:
         case_sensitive = True
