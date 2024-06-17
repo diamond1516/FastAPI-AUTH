@@ -6,7 +6,7 @@ from datetime import timedelta
 
 
 class DbSettings(BaseSettings):
-    ECHO: bool = False
+    ECHO: bool = True
     URL: str = security.DB_SECURITY.get_db_url()
 
 

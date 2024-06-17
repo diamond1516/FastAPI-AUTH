@@ -2,7 +2,7 @@ fastapi~=0.68.0
 uvicorn==0.15.0
 sqlalchemy[asyncio]
 passlib==1.7.4
-pyjwt
+pyjwt[crypto]
 alembic==1.13.1
 pydantic~=1.10.15
 psycopg2-binary
