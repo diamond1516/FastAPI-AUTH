@@ -25,7 +25,7 @@ oauth2_scheme = HTTPBearer()
 
 @api_router.post(
     "/signup/",
-    response_model=auth.TokenSchema
+    response_model=auth.TokenSchema,
 )
 async def signup(
         user_data: auth.SignupSchema = Depends(validators.signup_validator),
@@ -47,7 +47,7 @@ async def signup(
 
 @api_router.post(
     '/login/',
-    response_model=auth.TokenSchema
+    response_model=auth.TokenSchema,
 )
 async def login(
         user: User = Depends(validators.login_validator),
@@ -68,7 +68,7 @@ async def get_user_schema(
 
 @api_router.get(
     '/user-me/',
-    response_model=auth.UserSchema
+    response_model=auth.UserSchema,
 )
 async def user_me(
         current_user: auth.UserSchema = Depends(get_user_schema)
