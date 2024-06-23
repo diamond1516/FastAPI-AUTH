@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from app.api import validators
 
 from app.schemas import auth
 from app.models.user import User
@@ -22,7 +24,10 @@ api_router = APIRouter(prefix="/auth", tags=["auth"])
     "/signup",
     response_model=auth.Token
 )
-async def signup(user_data: auth.Signup, db: AsyncSession = Depends(get_db)):
+async def signup(
+        user_data: auth.SignupSchema = Depends(validators.signup_validator),
+        db: AsyncSession = Depends(get_db)
+):
     data = user_data.dict()
     data["password"] = password.hash_password(user_data.password).decode("utf-8")
 
