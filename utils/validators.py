@@ -34,7 +34,7 @@ async def signup_validator(
 async def login_validator(
         data: auth.LoginSchema,
         db: AsyncSession = Depends(get_db)
-) -> user_models.User:
+):
     result = await db.execute(select(user_models.User).filter(user_models.User.username == data.username))
     user = result.scalars().first()
 
