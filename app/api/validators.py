@@ -50,5 +50,4 @@ async def login_validator(
             detail="Incorrect password"
         )
 
-
     return data
