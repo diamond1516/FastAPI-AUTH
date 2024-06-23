@@ -1,4 +1,6 @@
-from pydantic import BaseModel
+from typing import Optional
+
+from pydantic import BaseModel, Field
 
 
 class SignupSchema(BaseModel):
@@ -9,9 +11,13 @@ class SignupSchema(BaseModel):
 
 
 class LoginSchema(BaseModel):
-    id: str = None
+    id: Optional[int] = None
     username: str
     password: str
+
+    class Config:
+        orm_mode = True
+        exclude_defaults = True
 
 
 class TokenSchema(BaseModel):

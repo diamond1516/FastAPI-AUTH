@@ -15,14 +15,14 @@ async def signup_validator(
         or_(user_models.User.username == user_data.username, user_models.User.email == user_data.email)
     ))
 
-    existing_user = result.scalars().first()
+    user = result.scalars().first()
 
-    if existing_user.username == user_data.username:
+    if user and user.username == user_data.username:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="This username already exists"
         )
-    if user_data.email and existing_user.email == user_data.email:
+    if user and user_data.email and user.email == user_data.email:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="This email already exists"
@@ -44,10 +44,11 @@ async def login_validator(
             detail="Incorrect username"
         )
 
-    if not password.verify_password(data.password, user.password):
+    if not password.verify_password(data.password, user.password.encode('utf-8')):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect password"
         )
+
 
     return data

@@ -17,7 +17,7 @@ async def get_jwt_payload(user: User) -> dict:
     )
 
 
-api_router = APIRouter(prefix="/auth/", tags=["auth"])
+api_router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @api_router.post(
@@ -29,7 +29,7 @@ async def signup(
         db: AsyncSession = Depends(get_db)
 ):
     data = user_data.dict()
-    data["password"] = password.hash_password(user_data.password)
+    data["password"] = password.hash_password(user_data.password).decode("utf-8")
 
     new_user = User(**data)
 
