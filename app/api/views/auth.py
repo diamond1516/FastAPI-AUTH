@@ -1,12 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from app.api import validators
+from fastapi.security import HTTPBearer
 
 from app.schemas import auth
 from app.models.user import User
 from app.api.deps import get_db
-from utils import password, jwt
+from utils import password, jwt, validators
 
 
 async def get_jwt_payload(user: User) -> dict:
@@ -18,6 +17,8 @@ async def get_jwt_payload(user: User) -> dict:
 
 
 api_router = APIRouter(prefix="/auth", tags=["auth"])
+
+oauth2_scheme = HTTPBearer()
 
 
 @api_router.post(
@@ -56,3 +57,6 @@ async def login(
 
     token = await jwt.encode_jwt(payload)
     return auth.TokenSchema(access_token=token)
+
+
+
