@@ -8,6 +8,10 @@ class SignupSchema(BaseModel):
     first_name: str = None
 
 
-class Token(BaseModel):
+class LoginSchema(BaseModel):
+    username: str
+    password: str
+
+class TokenSchema(BaseModel):
     access_token: str
     token_type: str = 'bearer'
