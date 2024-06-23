@@ -3,6 +3,11 @@ from utils.user_helper import get_current_user
 
 
 class BasePermission:
+
+    """
+    This is the base permission class that all permissions must inherit from.
+    """
+
     async def has_permission(self, user, request, view=None):
         raise NotImplementedError
 
