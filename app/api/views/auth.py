@@ -5,7 +5,9 @@ from fastapi.security import HTTPBearer
 from app.schemas import auth
 from app.models.user import User
 from app.api.deps import get_db
-from utils import password, jwt, validators
+from app.schemas.auth import UserSchema
+from utils import password, jwt, validators, user_helper
+from typing import Union
 
 
 async def get_jwt_payload(user: User) -> dict:
@@ -48,15 +50,31 @@ async def signup(
     response_model=auth.TokenSchema
 )
 async def login(
-        data: auth.LoginSchema = Depends(validators.login_validator),
+        user: User = Depends(validators.login_validator),
 ):
-    payload = {
-        'id': data.id,
-        'username': data.username,
-    }
+    payload = await get_jwt_payload(user)
 
     token = await jwt.encode_jwt(payload)
     return auth.TokenSchema(access_token=token)
 
 
+async def get_user_schema(
+        user: Union[User, None] = Depends(user_helper.get_current_user),
+) -> auth.UserSchema:
+    return UserSchema(
+        id=user.id,
+        username=user.username,
+        email=user.email,
+        password=user.password,
+        first_name=user.first_name,
+    )
 
+
+@api_router.get(
+    '/user-me/',
+    response_model=auth.UserSchema
+)
+async def user_me(
+        current_user: auth.UserSchema = Depends(get_user_schema)
+):
+    return current_user

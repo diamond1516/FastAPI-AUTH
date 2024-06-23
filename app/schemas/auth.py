@@ -1,5 +1,6 @@
 from typing import Union
 from typing import Annotated
+
 from pydantic import BaseModel, Field
 
 
@@ -11,7 +12,6 @@ class SignupSchema(BaseModel):
 
 
 class LoginSchema(BaseModel):
-    id: Union[int, None] = None
     username: str
     password: str
 
@@ -23,3 +23,11 @@ class LoginSchema(BaseModel):
 class TokenSchema(BaseModel):
     access_token: str
     token_type: str = 'bearer'
+
+
+class UserSchema(BaseModel):
+    id: int
+    username: str
+    email: str = None
+    first_name: str = None
+    password: str
