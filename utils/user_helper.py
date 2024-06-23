@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from utils import jwt
@@ -6,6 +6,7 @@ from app.models import user as user_models
 from app.api.deps import get_db
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from typing import Union
+from jwt.exceptions import InvalidTokenError, DecodeError
 
 http_bearer = HTTPBearer()
 
@@ -13,9 +14,14 @@ http_bearer = HTTPBearer()
 async def get_current_token_payload(
         credentials: HTTPAuthorizationCredentials = Depends(http_bearer)
 ) -> dict:
-    payload = await jwt.decode_jwt(credentials.credentials)
-
-    return payload
+    try:
+        payload = await jwt.decode_jwt(credentials.credentials)
+        return payload
+    except (InvalidTokenError, DecodeError):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+        )
 
 
 async def get_current_user(
