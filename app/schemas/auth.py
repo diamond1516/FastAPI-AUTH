@@ -9,8 +9,10 @@ class SignupSchema(BaseModel):
 
 
 class LoginSchema(BaseModel):
+    id: str = None
     username: str
     password: str
+
 
 class TokenSchema(BaseModel):
     access_token: str

@@ -42,16 +42,12 @@ async def signup(
     return auth.TokenSchema(access_token=token, )
 
 
-
-
 @api_router.post(
     '/login/',
     response_model=auth.TokenSchema
 )
 async def login(
-    data: auth.LoginSchema = Depends(),
-    db: AsyncSession = Depends(get_db)
+        data: auth.LoginSchema = Depends(validators.login_validator),
+        db: AsyncSession = Depends(get_db)
 ):
-
     pass
-
