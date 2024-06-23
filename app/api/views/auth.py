@@ -62,11 +62,7 @@ async def get_user_schema(
         user: Union[User, None] = Depends(user_helper.get_current_user),
 ) -> auth.UserSchema:
     return UserSchema(
-        id=user.id,
-        username=user.username,
-        email=user.email,
-        password=user.password,
-        first_name=user.first_name,
+        **user.__dict__
     )
 
 
