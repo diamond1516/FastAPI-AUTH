@@ -17,6 +17,7 @@ async def check_permission(permission: BasePermission):
             user=Depends(get_current_user),
             request: Request = Depends(),
     ):
+
         if not permission.has_permission(user, request):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN, detail="You do not have permission to perform this action"
