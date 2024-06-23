@@ -1,5 +1,5 @@
 from typing import Optional
-
+from typing import Annotated
 from pydantic import BaseModel, Field
 
 
@@ -11,7 +11,7 @@ class SignupSchema(BaseModel):
 
 
 class LoginSchema(BaseModel):
-    id: Optional[int] = None
+    id: Annotated[int, Field(exclude=True)] = None
     username: str
     password: str
 
