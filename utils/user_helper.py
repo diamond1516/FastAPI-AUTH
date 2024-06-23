@@ -8,6 +8,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from typing import Union
 from jwt.exceptions import InvalidTokenError, DecodeError
 
+
 http_bearer = HTTPBearer()
 
 
@@ -32,8 +33,3 @@ async def get_current_user(
         user_models.User.id == payload['sub'], user_models.User.username == payload['username']
     ))
     return result.scalars().first()
-
-
-
-
-
