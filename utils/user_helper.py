@@ -6,7 +6,7 @@ from app.models import user as user_models
 from app.api.deps import get_db
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from typing import Union
-from jwt.exceptions import InvalidTokenError, DecodeError
+from jwt.exceptions import InvalidTokenError, DecodeError, ExpiredSignatureError
 
 
 http_bearer = HTTPBearer()
@@ -15,9 +15,15 @@ http_bearer = HTTPBearer()
 async def get_current_token_payload(
         credentials: HTTPAuthorizationCredentials = Depends(http_bearer)
 ) -> dict:
+
     try:
         payload = await jwt.decode_jwt(credentials.credentials)
         return payload
+    except ExpiredSignatureError:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Token expired",
+        )
     except (InvalidTokenError, DecodeError):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
