@@ -17,7 +17,7 @@ async def get_jwt_payload(user: User) -> dict:
     )
 
 
-api_router = APIRouter(prefix="/auth", tags=["auth"])
+api_router = APIRouter(prefix="/auth/", tags=["auth"])
 
 
 @api_router.post(
@@ -39,7 +39,7 @@ async def signup(
     payload = await get_jwt_payload(new_user)
     token = await jwt.encode_jwt(payload)
 
-    return auth.TokenSchema(access_token=token, )
+    return auth.TokenSchema(access_token=token)
 
 
 @api_router.post(
@@ -48,6 +48,11 @@ async def signup(
 )
 async def login(
         data: auth.LoginSchema = Depends(validators.login_validator),
-        db: AsyncSession = Depends(get_db)
 ):
-    pass
+    payload = {
+        'id': data.id,
+        'username': data.username,
+    }
+
+    token = await jwt.encode_jwt(payload)
+    return auth.TokenSchema(access_token=token)
