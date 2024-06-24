@@ -8,11 +8,12 @@ from sqlalchemy import (
 )
 from app.models.base import BaseModel
 import enum
+import alembic as op
 
 
 class UserStatus(enum.Enum):
-    ACTIVE = 'active'
-    INACTIVE = 'inactive'
+    active = 'active'
+    inactive = 'inactive'
 
 
 class User(BaseModel):
@@ -22,6 +23,6 @@ class User(BaseModel):
     email = Column(String(50), nullable=True)
     password = Column(String(255), nullable=False)
     status = Column(
-        Enum(UserStatus, create_type=True),
-        nullable=True, default=UserStatus.ACTIVE
+        Enum(UserStatus),
+        nullable=True, default=UserStatus.active
     )

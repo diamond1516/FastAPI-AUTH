@@ -1,10 +1,10 @@
-from pydantic import BaseModel, Field
-from typing import Any
+from pydantic import BaseModel, Field, EmailStr
+from typing import Any, Optional
 
 
 class SignupSchema(BaseModel):
     username: str
-    email: str = None
+    email: Optional[EmailStr] = None
     password: str
     first_name: str = None
 
