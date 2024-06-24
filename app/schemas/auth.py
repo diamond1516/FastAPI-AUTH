@@ -1,7 +1,5 @@
-from typing import Union
-from typing import Annotated
-
 from pydantic import BaseModel, Field
+from typing import Any
 
 
 class SignupSchema(BaseModel):
@@ -31,3 +29,4 @@ class UserSchema(BaseModel):
     email: str = None
     first_name: str = None
     password: str
+    status: Any = None
