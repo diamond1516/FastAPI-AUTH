@@ -1,5 +1,4 @@
-from fastapi import APIRouter, WebSocket, Depends, WebSocketDisconnect
-from fastapi.responses import HTMLResponse
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from app.core.websocket_manager import socket_manager
 
 router = APIRouter(
