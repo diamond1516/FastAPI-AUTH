@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.security import HTTPBearer
 
 from app.schemas import auth
-from app.models.user import User, UserStatus
+from app.models.user import User
 from app.api.deps import get_db
 from app.schemas.auth import UserSchema
 from utils import password, jwt, validators, user_helper
@@ -19,8 +19,6 @@ async def get_jwt_payload(user: User) -> dict:
 
 
 api_router = APIRouter(prefix="/auth", tags=["auth"])
-
-oauth2_scheme = HTTPBearer()
 
 
 @api_router.post(
@@ -61,7 +59,6 @@ async def login(
 async def get_user_schema(
         user: Union[User, None] = Depends(user_helper.get_current_user),
 ) -> auth.UserSchema:
-    print(user.status == UserStatus.ACTIVE)
     return UserSchema(
         **user.__dict__
     )

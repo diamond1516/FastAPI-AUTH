@@ -3,7 +3,7 @@ from app.core.server import Server
 from app.core.config import SETTINGS
 
 
-def app(_=None) -> FastAPI:
+def app() -> FastAPI:
     main = FastAPI(
         title=SETTINGS.PROJECT_NAME,
         debug=SETTINGS.DEBUG,
