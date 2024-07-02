@@ -3,7 +3,7 @@ from app.core.websocket_manager import socket_manager
 
 router = APIRouter(
     prefix="/ws",
-    tags=["websockets"],
+    tags=["websocket"],
 )
 
 
