@@ -9,6 +9,10 @@ class BasePermission:
     """
 
     async def has_permission(self, user, request, view=None):
+        """
+        >>> self.has_permission(user, request, view)
+        """
+
         raise NotImplementedError
 
 

@@ -1,5 +1,6 @@
 import datetime
 
+from fastapi import HTTPException
 from sqlalchemy import (
     Column,
     Integer,
@@ -8,6 +9,7 @@ from sqlalchemy import (
     DateTime,
 )
 from app.models.base import BaseModel
+from sqlalchemy.orm import validates
 import enum
 
 
@@ -26,6 +28,8 @@ class User(BaseModel):
     status = Column(String(20), nullable=False, default=UserStatus.NEW.value)
     last_login = Column(DateTime(timezone=True), nullable=True, default=datetime.datetime.utcnow)
 
-
-
-
+    @validates('status')
+    def validate_status(self, key, status):
+        if status not in [i.value for i in UserStatus]:
+            raise HTTPException(status_code=400, detail='Invalid status')
+        return status

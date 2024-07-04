@@ -4,7 +4,7 @@ from datetime import timedelta
 
 
 class DbSettings(BaseSettings):
-    ECHO: bool = True
+    ECHO: bool = False
     URL: str = security.DB_SECURITY.get_db_url()
 
 
