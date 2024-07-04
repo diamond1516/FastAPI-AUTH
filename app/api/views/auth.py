@@ -81,3 +81,7 @@ async def user_me(
         current_user: auth.UserSchema = Depends(get_user_schema)
 ):
     return current_user
+
+
+
+

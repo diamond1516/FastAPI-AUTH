@@ -4,7 +4,7 @@ from typing import Any, Optional
 
 class SignupSchema(BaseModel):
     username: str
-    email: Optional[EmailStr] = None
+    email: EmailStr
     password: str
     first_name: str = None
 
