@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi.security import HTTPBearer
 
 from app.schemas import auth
 from app.models.user import User
