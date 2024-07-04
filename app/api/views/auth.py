@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -48,7 +50,15 @@ async def signup(
 )
 async def login(
         user: User = Depends(validators.login_validator),
+        db: AsyncSession = Depends(get_db),
 ):
+
+    user.last_login = datetime.utcnow()
+
+    db.add(user)
+    await db.commit()
+    await db.refresh(user)
+
     payload = await get_jwt_payload(user)
 
     token = await jwt.encode_jwt(payload)

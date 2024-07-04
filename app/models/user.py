@@ -49,3 +49,6 @@ class User(BaseModel):
         if status not in [i.value for i in UserStatus]:
             raise HTTPException(status_code=400, detail='Invalid status')
         return status
+
+
+
