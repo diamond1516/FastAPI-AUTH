@@ -9,14 +9,28 @@ from sqlalchemy import (
     DateTime,
 )
 from app.models.base import BaseModel
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import validates, relationship
 import enum
+from app.models.mixins.user import UserRelationMixin
+from app.core.config import SETTINGS
 
 
 class UserStatus(enum.Enum):
     ACTIVE = 'active'
     INACTIVE = 'inactive'
     NEW = 'new'
+
+
+def default_expire_date():
+    return datetime.datetime.utcnow() + SETTINGS.CODE_EXPIRE
+
+
+class UserConfirmation(BaseModel, UserRelationMixin):
+    _user_id_unique = True
+    _user_back_populates = 'user_confirmation'
+
+    code = Column(String(4), nullable=False)
+    expire_date = Column(DateTime, nullable=False, default=default_expire_date)
 
 
 class User(BaseModel):
@@ -27,6 +41,8 @@ class User(BaseModel):
     password = Column(String(255), nullable=False)
     status = Column(String(20), nullable=False, default=UserStatus.NEW.value)
     last_login = Column(DateTime(timezone=True), nullable=True, default=datetime.datetime.utcnow)
+
+    user_confirmation = relationship("UserConfirmation", uselist=False, back_populates="user")
 
     @validates('status')
     def validate_status(self, key, status):
