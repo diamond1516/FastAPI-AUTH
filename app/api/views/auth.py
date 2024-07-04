@@ -7,16 +7,8 @@ from app.schemas import auth
 from app.models.user import User
 from app.api.deps import get_db
 from app.schemas.auth import UserSchema
-from utils import password, jwt, validators, user_helper
+from utils import password, jwt, validators, user_helper, utility
 from typing import Union
-
-
-async def get_jwt_payload(user: User) -> dict:
-    user_data = user.__dict__
-    return dict(
-        sub=user_data['id'],
-        username=user_data['username'],
-    )
 
 
 api_router = APIRouter(prefix="/auth", tags=["auth"])
@@ -35,10 +27,12 @@ async def signup(
 
     new_user = User(**data)
 
+    code = ...
+
     db.add(new_user)
     await db.commit()
     await db.refresh(new_user)
-    payload = await get_jwt_payload(new_user)
+    payload = await utility.UTILITY.get_jwt_payload(new_user)
     token = await jwt.encode_jwt(payload)
 
     return auth.TokenSchema(access_token=token)
@@ -59,7 +53,7 @@ async def login(
     await db.commit()
     await db.refresh(user)
 
-    payload = await get_jwt_payload(user)
+    payload = await utility.UTILITY.get_jwt_payload(user)
 
     token = await jwt.encode_jwt(payload)
     return auth.TokenSchema(access_token=token)

@@ -9,3 +9,4 @@ def app() -> FastAPI:
         debug=SETTINGS.DEBUG,
     )
     return Server(main).get_app()
+
