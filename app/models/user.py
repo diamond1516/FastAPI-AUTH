@@ -1,18 +1,13 @@
 import datetime
 
 from fastapi import HTTPException
-from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    Boolean,
-    DateTime,
-)
+from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from app.models.base import BaseModel
 from sqlalchemy.orm import validates, relationship
 import enum
 from app.models.mixins.user import UserRelationMixin
 from app.core.config import SETTINGS
+from utils import password as password_util
 
 
 class UserStatus(enum.Enum):
@@ -51,4 +46,14 @@ class User(BaseModel):
         return status
 
 
+    def check_password(self, password: str):
+        return password_util.verify_password(
+            password,
+            self.password.encode('utf-8'),
+        )
+
+
+    def set_password(self, password: str = password):
+        hashed_pass = password_util.hash_password(password).decode('utf-8')
+        self.password = hashed_pass
 
