@@ -45,15 +45,12 @@ class User(BaseModel):
             raise HTTPException(status_code=400, detail='Invalid status')
         return status
 
-
     def check_password(self, password: str):
         return password_util.verify_password(
             password,
             self.password.encode('utf-8'),
         )
 
-
     def set_password(self, password: str = password):
         hashed_pass = password_util.hash_password(password).decode('utf-8')
         self.password = hashed_pass
-
