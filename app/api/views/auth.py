@@ -28,8 +28,7 @@ async def signup(
     new_user.set_password(data['password'])
 
     db.add(new_user)
-    await db.commit()
-    await db.refresh(new_user)
+    await db.flush()
 
     code = await UTILITY.generate_four_digit_number()
     user_confirmation = UserConfirmation(code=code, user=new_user)
