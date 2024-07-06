@@ -7,7 +7,7 @@ class Utility:
 
     @classmethod
     async def generate_four_digit_number(cls):
-        return random.randint(1000, 9999)
+        return str(random.randint(1000, 9999))
 
     @classmethod
     async def get_jwt_payload(cls, user: User) -> dict:

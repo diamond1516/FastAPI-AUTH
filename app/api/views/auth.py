@@ -4,12 +4,12 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.schemas import auth
-from app.models.user import User
+from app.models.user import User, UserConfirmation
 from app.api.deps import get_db
 from app.schemas.auth import UserSchema
-from utils import password, jwt, validators, user_helper, utility
+from utils import jwt, validators, user_helper
 from typing import Union
-
+from utils.utility import UTILITY
 
 api_router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -23,16 +23,21 @@ async def signup(
         db: AsyncSession = Depends(get_db)
 ):
     data = user_data.dict()
-    data["password"] = password.hash_password(user_data.password).decode("utf-8")
 
     new_user = User(**data)
-
-    code = ...
+    new_user.set_password(data['password'])
 
     db.add(new_user)
     await db.commit()
     await db.refresh(new_user)
-    payload = await utility.UTILITY.get_jwt_payload(new_user)
+
+    code = await UTILITY.generate_four_digit_number()
+    user_confirmation = UserConfirmation(code=code, user=new_user)
+
+    db.add(user_confirmation)
+    await db.commit()
+
+    payload = await UTILITY.get_jwt_payload(new_user)
     token = await jwt.encode_jwt(payload)
 
     return auth.TokenSchema(access_token=token)
@@ -46,14 +51,13 @@ async def login(
         user: User = Depends(validators.login_validator),
         db: AsyncSession = Depends(get_db),
 ):
-
     user.last_login = datetime.utcnow()
 
     db.add(user)
     await db.commit()
     await db.refresh(user)
 
-    payload = await utility.UTILITY.get_jwt_payload(user)
+    payload = await UTILITY.get_jwt_payload(user)
 
     token = await jwt.encode_jwt(payload)
     return auth.TokenSchema(access_token=token)
@@ -75,7 +79,3 @@ async def user_me(
         current_user: auth.UserSchema = Depends(get_user_schema)
 ):
     return current_user
-
-
-
-
