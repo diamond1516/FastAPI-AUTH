@@ -5,7 +5,7 @@ from app.api.deps import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Depends, HTTPException, Form, status
 from sqlalchemy import select, or_
-from app.models import user as user_models, User
+from app.models import user as user_models, User, UserConfirmation
 from app.schemas import auth
 from utils import password
 from utils.user_helper import get_current_user
@@ -57,9 +57,17 @@ async def login_validator(
     return user
 
 
+async def get_user_confirmation(user_id: int, db: AsyncSession):
+    result = await db.execute(
+        select(UserConfirmation).filter(UserConfirmation.user_id == user_id)
+    )
+    return result.scalars().first()
+
+
 async def verify_validator(
-    code: int = Form(..., max_length=4),
-    user: Union[User, None] = Depends(get_current_user),
+        code: int = Form(...),
+        user: Union[User, None] = Depends(get_current_user),
+        db: AsyncSession = Depends(get_db)
 ):
     if user is None:
         raise HTTPException(
@@ -67,7 +75,15 @@ async def verify_validator(
             detail="User not found",
         )
 
-    if user.user_confirmation.code != str(code) or user.user_confirmation.expire_date < datetime.utcnow():
+    user_confirmation = await get_user_confirmation(user.id, db)
+
+    if user_confirmation is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not found",
+        )
+
+    if user_confirmation.code != str(code) or user_confirmation.expire_date < datetime.utcnow():
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Code expired or expire date is invalid",
