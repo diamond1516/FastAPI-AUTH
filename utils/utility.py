@@ -7,8 +7,6 @@ import typing
 from app.core.security import MAIN_SECURITY
 from email.message import EmailMessage
 
-from app.models import User
-
 
 class Utility:
 
@@ -17,7 +15,7 @@ class Utility:
         return str(random.randint(1000, 9999))
 
     @classmethod
-    async def get_jwt_payload(cls, user: User) -> dict:
+    async def get_jwt_payload(cls, user: object) -> dict:
         user_data = user.__dict__
         return dict(
             sub=user_data['id'],

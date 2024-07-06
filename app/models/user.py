@@ -8,9 +8,7 @@ import enum
 from app.models.mixins.user import UserRelationMixin
 from app.core.config import SETTINGS
 from utils import password as password_util
-
-if typing.TYPE_CHECKING:
-    from utils.utility import UTILITY
+from utils.utility import UTILITY
 
 
 class UserStatus(enum.Enum):
@@ -31,12 +29,12 @@ class UserConfirmation(BaseModel, UserRelationMixin):
     code = Column(String(4), nullable=False)
     expire_date = Column(DateTime, nullable=False, default=default_expire_date)
 
-    def send_confirmation_email(self):
+    async def send_confirmation_email(self):
         email = self.user.email if self.user else None
 
         assert email is not None, "Email must be set"
 
-        UTILITY.send_code_email(email, self.MESSAGE % self.code)
+        await UTILITY.send_code_email(email, self.MESSAGE % self.code)
 
 
 class User(BaseModel):
