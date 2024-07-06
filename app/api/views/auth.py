@@ -22,9 +22,8 @@ async def signup(
         user_data: auth.SignupSchema = Depends(validators.signup_validator),
         db: AsyncSession = Depends(get_db)
 ):
-    data = user_data.dict()
 
-    new_user = User(**data)
+    new_user = User(**user_data.dict())
     new_user.set_password()
 
     db.add(new_user)
