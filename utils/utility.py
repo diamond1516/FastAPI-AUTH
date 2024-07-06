@@ -23,7 +23,7 @@ class Utility:
         )
 
     @classmethod
-    async def send_code_email(cls, email, msg):
+    async def send_msg_email(cls, email, msg):
         subject = "FastAPI AUTH Test"
         em = EmailMessage()
         em['Message-ID'] = str(uuid.uuid4())

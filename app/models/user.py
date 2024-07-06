@@ -34,7 +34,7 @@ class UserConfirmation(BaseModel, UserRelationMixin):
 
         assert email is not None, "Email must be set"
 
-        await UTILITY.send_code_email(email, self.MESSAGE % self.code)
+        await UTILITY.send_msg_email(email, self.MESSAGE % self.code)
 
 
 class User(BaseModel):
