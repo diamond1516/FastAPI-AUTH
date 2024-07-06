@@ -8,7 +8,7 @@ from sqlalchemy.orm import validates, relationship
 from app.core.config import SETTINGS
 from app.models.base import BaseModel
 from app.models.mixins.user import UserRelationMixin
-from utils import password as password_util
+from utils import password as password_util, jwt
 from utils.utility import UTILITY
 
 
@@ -73,3 +73,11 @@ class User(BaseModel):
             self.password = password_util.hash_password(password).decode('utf-8')
         else:
             self.password = password
+
+    async def get_token(self):
+
+        """
+            get token function
+        """
+
+        return await jwt.encode_jwt(await UTILITY.get_jwt_payload(self))

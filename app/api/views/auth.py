@@ -1,10 +1,11 @@
 from datetime import datetime
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Form, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.schemas import auth
 from app.models.user import User, UserConfirmation
+from app.models import user as user_model
 from app.api.deps import get_db
 from app.schemas.auth import UserSchema
 from utils import jwt, validators, user_helper
@@ -22,7 +23,6 @@ async def signup(
         user_data: auth.SignupSchema = Depends(validators.signup_validator),
         db: AsyncSession = Depends(get_db)
 ):
-
     new_user = User(**user_data.dict())
     new_user.set_password()
 
@@ -39,6 +39,22 @@ async def signup(
     payload = await UTILITY.get_jwt_payload(new_user)
     token = await jwt.encode_jwt(payload)
 
+    return auth.TokenSchema(access_token=token)
+
+
+@api_router.post(
+    '/verify/',
+    response_model=auth.TokenSchema,
+)
+async def verify(
+        db: AsyncSession = Depends(get_db),
+        user: User = Depends(validators.verify_validator),
+):
+    user.status = user_model.UserStatus.ACTIVE.value
+
+    await db.commit()
+
+    token = await user.get_token()
     return auth.TokenSchema(access_token=token)
 
 
