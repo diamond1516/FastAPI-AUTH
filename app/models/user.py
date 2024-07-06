@@ -29,7 +29,7 @@ class UserConfirmation(BaseModel, UserRelationMixin):
     code = Column(String(4), nullable=False)
     expire_date = Column(DateTime, nullable=False, default=default_expire_date)
 
-    async def send_confirmation_email(self):
+    async def send_code_to_email(self):
         email = self.user.email if self.user else None
 
         assert email is not None, "Email must be set"
