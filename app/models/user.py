@@ -29,6 +29,8 @@ class UserConfirmation(BaseModel, UserRelationMixin):
 
 
 class User(BaseModel):
+
+    HASHED_PREFIX = 'hashed_prefix__'
     username = Column(String(20), unique=True, nullable=False)
     first_name = Column(String(20), nullable=True)
     last_name = Column(String(20), nullable=True)
@@ -46,11 +48,19 @@ class User(BaseModel):
         return status
 
     def check_password(self, password: str):
+
+        hashed_password_with_prefix = self.password[len(self.HASHED_PREFIX):]
+
         return password_util.verify_password(
             password,
-            self.password.encode('utf-8'),
+            hashed_password_with_prefix.encode('utf-8'),
         )
 
     def set_password(self, password: str = password):
-        hashed_pass = password_util.hash_password(password).decode('utf-8')
-        self.password = hashed_pass
+        if not password.startswith(self.HASHED_PREFIX):
+
+            hashed_pass = password_util.hash_password(password).decode('utf-8')
+            self.password = f"{self.HASHED_PREFIX}{hashed_pass}"
+
+        else:
+            self.password = password
