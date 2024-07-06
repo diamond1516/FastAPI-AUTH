@@ -1,12 +1,13 @@
 import datetime
-import typing
-from fastapi import HTTPException
-from sqlalchemy import Column, Integer, String, Boolean, DateTime
-from app.models.base import BaseModel
-from sqlalchemy.orm import validates, relationship
 import enum
-from app.models.mixins.user import UserRelationMixin
+
+from fastapi import HTTPException
+from sqlalchemy import Column, String, DateTime
+from sqlalchemy.orm import validates, relationship
+
 from app.core.config import SETTINGS
+from app.models.base import BaseModel
+from app.models.mixins.user import UserRelationMixin
 from utils import password as password_util
 from utils.utility import UTILITY
 
