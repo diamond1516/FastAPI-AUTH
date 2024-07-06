@@ -57,7 +57,6 @@ class User(BaseModel):
     def set_password(self, password: str):
 
         if not password.startswith(self.HASHED_PREFIX):
-            hashed_pass = password_util.hash_password(password).decode('utf-8')
-            self.password = f"{self.HASHED_PREFIX}{hashed_pass}"
+            self.password = password_util.hash_password(password).decode('utf-8')
         else:
             self.password = password
