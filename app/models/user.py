@@ -27,11 +27,10 @@ def default_expire_date():
 class UserConfirmation(BaseModel, UserRelationMixin):
     _user_id_unique = True
     _user_back_populates = 'user_confirmation'
+    MESSAGE = 'Sizning tasdiqlash kodingiz: %s'
 
     code = Column(String(4), nullable=False)
     expire_date = Column(DateTime, nullable=False, default=default_expire_date)
-
-    MESSAGE = 'Sizning tasdiqlash kodingiz: %s'
 
     def send_confirmation_email(self):
         email = self.user.email if self.user else None
