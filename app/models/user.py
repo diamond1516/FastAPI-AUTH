@@ -1,4 +1,5 @@
 import datetime
+import typing
 
 from fastapi import HTTPException
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
@@ -8,6 +9,9 @@ import enum
 from app.models.mixins.user import UserRelationMixin
 from app.core.config import SETTINGS
 from utils import password as password_util
+
+if typing.TYPE_CHECKING:
+    from utils.utility import UTILITY
 
 
 class UserStatus(enum.Enum):
@@ -27,9 +31,17 @@ class UserConfirmation(BaseModel, UserRelationMixin):
     code = Column(String(4), nullable=False)
     expire_date = Column(DateTime, nullable=False, default=default_expire_date)
 
+    MESSAGE = 'Sizning tasdiqlash kodingiz: %s'
+
+    def send_confirmation_email(self):
+        email = self.user.email if self.user else None
+
+        assert email is not None, "Email must be set"
+
+        UTILITY.send_code_email(email, self.MESSAGE % self.code)
+
 
 class User(BaseModel):
-
     HASHED_PREFIX = '$2b$12$'
 
     username = Column(String(20), unique=True, nullable=False)
@@ -56,7 +68,9 @@ class User(BaseModel):
             hashed_password_with_prefix.encode('utf-8'),
         )
 
-    def set_password(self, password: str):
+    def set_password(self, password: str = None):
+
+        password = password or self.password
 
         if not password.startswith(self.HASHED_PREFIX):
             self.password = password_util.hash_password(password).decode('utf-8')

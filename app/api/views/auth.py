@@ -25,7 +25,7 @@ async def signup(
     data = user_data.dict()
 
     new_user = User(**data)
-    new_user.set_password(data['password'])
+    new_user.set_password()
 
     db.add(new_user)
     await db.flush()
@@ -35,6 +35,8 @@ async def signup(
 
     db.add(user_confirmation)
     await db.commit()
+
+    user_confirmation.send_confirmation_email()
 
     payload = await UTILITY.get_jwt_payload(new_user)
     token = await jwt.encode_jwt(payload)
