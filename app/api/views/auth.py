@@ -36,7 +36,6 @@ async def signup(
     await db.commit()
 
     await user_confirmation.send_code_to_email()
-
     payload = await UTILITY.get_jwt_payload(new_user)
     token = await jwt.encode_jwt(payload)
 
