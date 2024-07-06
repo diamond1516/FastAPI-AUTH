@@ -17,14 +17,19 @@ async def get_current_token_payload(
 ) -> dict:
 
     try:
+
         payload = await jwt.decode_jwt(credentials.credentials)
         return payload
+
     except ExpiredSignatureError:
+
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Token expired",
         )
+
     except (InvalidTokenError, DecodeError):
+
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",
