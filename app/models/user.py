@@ -1,6 +1,5 @@
 import datetime
 import typing
-
 from fastapi import HTTPException
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from app.models.base import BaseModel
