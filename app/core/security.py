@@ -18,12 +18,12 @@ class MainSecurity(BaseSettings):
 
 
 class DataBaseSecurity(BaseSettings):
-    DB_NAME = os.environ.get('DB_NAME')
-    DB_USER = os.environ.get('DB_USER')
-    DB_PASSWORD = os.environ.get('DB_PASSWORD')
-    DB_HOST = os.environ.get('DB_HOST')
-    DB_PORT = os.environ.get('DB_PORT')
-    DB_ENGINE = os.environ.get('DB_ENGINE')
+    DB_NAME = os.environ.get('DB_NAME', "<DB_NAME>")
+    DB_USER = os.environ.get('DB_USER', "<DB_USER>")
+    DB_PASSWORD = os.environ.get('DB_PASSWORD', "<DB_PASSWORD>")
+    DB_HOST = os.environ.get('DB_HOST', "<DB_HOST>")
+    DB_PORT = os.environ.get('DB_PORT', "<DB_PORT>")
+    DB_ENGINE = os.environ.get('DB_ENGINE', "<DB_ENGINE>")
 
     def get_db_url(self):
         return f"{self.DB_ENGINE}://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
