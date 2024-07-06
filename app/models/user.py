@@ -29,7 +29,9 @@ class UserConfirmation(BaseModel, UserRelationMixin):
 
 
 class User(BaseModel):
+
     HASHED_PREFIX = '$2b$12$'
+
     username = Column(String(20), unique=True, nullable=False)
     first_name = Column(String(20), nullable=True)
     last_name = Column(String(20), nullable=True)
