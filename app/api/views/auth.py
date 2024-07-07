@@ -67,13 +67,11 @@ async def login(
 ):
     user.last_login = datetime.utcnow()
 
-    db.add(user)
     await db.commit()
     await db.refresh(user)
 
-    payload = await UTILITY.get_jwt_payload(user)
 
-    token = await jwt.encode_jwt(payload)
+    token = await user.get_token()
     return auth.TokenSchema(access_token=token)
 
 
