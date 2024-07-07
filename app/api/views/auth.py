@@ -70,7 +70,6 @@ async def login(
     await db.commit()
     await db.refresh(user)
 
-
     token = await user.get_token()
     return auth.TokenSchema(access_token=token)
 
