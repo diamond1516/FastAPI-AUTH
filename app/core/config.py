@@ -11,6 +11,7 @@ class DbSettings(BaseSettings):
 class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     WEBSOCKET_PREFIX: str = "/ws"
+    VERSION: str = "0.1.0"
     ACCESS_TOKEN_EXPIRE: timedelta = timedelta(days=1)
     CODE_EXPIRE: timedelta = timedelta(minutes=10)
     SERVER_NAME: str = "localhost"
