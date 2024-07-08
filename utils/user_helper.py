@@ -8,10 +8,7 @@ from app.api.deps import get_db
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from typing import Union
 from jwt.exceptions import InvalidTokenError, DecodeError, ExpiredSignatureError
-
-
-if typing.TYPE_CHECKING:
-    from app.models import user as user_models
+from app.models import user as user_models
 
 
 http_bearer = HTTPBearer(auto_error=False)

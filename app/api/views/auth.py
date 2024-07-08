@@ -101,4 +101,4 @@ async def user_me(
 async def test(
         user=Depends(get_user_with_permissions(IsAuthenticated)),
 ):
-    return {'salom': f'{user}'}
+    return {'salom': f'{user.username}'}
