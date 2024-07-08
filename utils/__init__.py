@@ -39,7 +39,7 @@ async def get_user_with_permissions(*permissions: type(BasePermission)):
             request: Request = Depends(),
     ) -> Union['User', None]:
 
-        objects = [permission() for permission in permissions]
+        objects = (permission() for permission in permissions)
 
         for permission in objects:
             if not await permission.has_permission(user, request):
