@@ -8,9 +8,9 @@ from app.models.user import User, UserConfirmation
 from app.models import user as user_model
 from app.api.deps import get_db
 from app.schemas.auth import UserSchema
-from utils import jwt, validators, user_helper
+from utils import UTILITY, get_current_user
 from typing import Union
-from utils.utility import UTILITY
+from utils import validators
 
 api_router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -75,7 +75,7 @@ async def login(
 
 
 async def get_user_schema(
-        user: Union[User, None] = Depends(user_helper.get_current_user),
+        user: Union[User, None] = Depends(get_current_user),
 ) -> auth.UserSchema:
     return UserSchema(
         **user.__dict__
