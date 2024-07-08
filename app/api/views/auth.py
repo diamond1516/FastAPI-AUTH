@@ -9,8 +9,8 @@ from app.models import user as user_model
 from app.api.deps import get_db
 from app.schemas.auth import UserSchema
 from utils import UTILITY, get_current_user, get_user_with_permissions
-from typing import Union, Type, Callable
-from utils import validators, BasePermission
+from typing import Union
+from utils import validators
 from utils.permissions import IsAuthenticated
 
 api_router = APIRouter(prefix="/auth", tags=["auth"])
