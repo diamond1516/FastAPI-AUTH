@@ -20,12 +20,12 @@ http_bearer = HTTPBearer(auto_error=False)
 async def get_current_token_payload(
         credentials: HTTPAuthorizationCredentials = Depends(http_bearer)
 ) -> Union[dict, None]:
+
     try:
 
         if credentials:
             payload = await jwt.decode_jwt(credentials.credentials)
             return payload
-
         return None
 
     except ExpiredSignatureError:
