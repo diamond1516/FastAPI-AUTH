@@ -33,10 +33,10 @@ class BasePermission:
         raise NotImplementedError
 
 
-async def get_user_with_permissions(*permissions: type(BasePermission)):
+def get_user_with_permissions(*permissions: type(BasePermission)):
     async def permission_checker(
+            request: Request,
             user=Depends(get_current_user),
-            request: Request = Depends(),
     ) -> Union['User', None]:
 
         for permission in (permission() for permission in permissions):

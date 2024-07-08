@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.schemas import auth
@@ -8,9 +8,10 @@ from app.models.user import User, UserConfirmation
 from app.models import user as user_model
 from app.api.deps import get_db
 from app.schemas.auth import UserSchema
-from utils import UTILITY, get_current_user
-from typing import Union
-from utils import validators
+from utils import UTILITY, get_current_user, get_user_with_permissions
+from typing import Union, Type, Callable
+from utils import validators, BasePermission
+from utils.permissions import IsAuthenticated
 
 api_router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -92,3 +93,12 @@ async def user_me(
         current_user: Union[UserSchema, None] = Depends(get_user_schema)
 ):
     return current_user if current_user else None
+
+
+@api_router.get(
+    '/test/',
+)
+async def test(
+        user=Depends(get_user_with_permissions(IsAuthenticated)),
+):
+    return {'salom': f'{user}'}
