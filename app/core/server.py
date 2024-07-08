@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from app.api import routes as routes_api
-from app.websocket import routes as websocket_routes
+from app import api
+from app import websocket
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import SETTINGS
 
@@ -24,11 +24,11 @@ class Server:
 
     @staticmethod
     def __register_routes(app):
-        routes_api.__routes__.register_routes(app, prefix=SETTINGS.API_V1_STR)
+        api.__routes__.register_routes(app, prefix=SETTINGS.API_V1_STR)
 
     @staticmethod
     def __register_websocket(app: FastAPI):
-        websocket_routes.__routes__.register_routes(app, prefix=SETTINGS.WEBSOCKET_PREFIX)
+        websocket.__routes__.register_routes(app, prefix=SETTINGS.WEBSOCKET_PREFIX)
 
     @staticmethod
     def __register_events(app: FastAPI):
