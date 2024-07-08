@@ -24,8 +24,8 @@ class BasePermission:
     """
     This is the base permission class that all permissions must inherit from.
     """
-
     async def has_permission(self, user, request, view=None):
+
         """
         >>> self.has_permission(user, request, view)
         """
