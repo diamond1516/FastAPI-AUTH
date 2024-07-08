@@ -39,9 +39,9 @@ async def get_user_with_permissions(*permissions: type(BasePermission)):
             request: Request = Depends(),
     ) -> Union['User', None]:
 
-        args = [permission() for permission in permissions]
+        objects = [permission() for permission in permissions]
 
-        for permission in args:
+        for permission in objects:
             if not await permission.has_permission(user, request):
                 raise HTTPException(
                     status_code=status.HTTP_403_FORBIDDEN, detail="You do not have permission to perform this action"
