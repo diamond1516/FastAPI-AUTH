@@ -8,8 +8,7 @@ from sqlalchemy.orm import validates, relationship
 from app.core.config import SETTINGS
 from app.models.base import BaseModel
 from app.models.mixins.user import UserRelationMixin
-from utils import password as password_util, jwt
-from utils.utility import UTILITY
+from utils import UTILITY, verify_password, hash_password, encode_jwt
 
 
 class UserStatus(enum.Enum):
@@ -60,7 +59,7 @@ class User(BaseModel):
     def check_password(self, password: str):
 
         hashed_password_with_prefix = self.password[len(self.HASHED_PREFIX):]
-        return password_util.verify_password(
+        return verify_password(
             password,
             hashed_password_with_prefix.encode('utf-8'),
         )
@@ -70,7 +69,7 @@ class User(BaseModel):
         password = password or self.password
 
         if not password.startswith(self.HASHED_PREFIX):
-            self.password = password_util.hash_password(password).decode('utf-8')
+            self.password = hash_password(password).decode('utf-8')
         else:
             self.password = password
 
@@ -80,4 +79,4 @@ class User(BaseModel):
             get token function
         """
 
-        return await jwt.encode_jwt(await UTILITY.get_jwt_payload(self))
+        return await encode_jwt(await UTILITY.get_jwt_payload(self))
