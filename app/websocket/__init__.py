@@ -1,3 +1,7 @@
+__all__ = (
+    '__routes__',
+)
+
 from app.core.routes import Routes
 
 
