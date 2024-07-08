@@ -39,6 +39,8 @@ async def get_user_with_permissions(*permissions: BasePermission):
             request: Request = Depends(),
     ) -> Union['User', None]:
 
+        # [permission() for permission in permissions]
+
         for permission in permissions:
             if not await permission.has_permission(user, request):
                 raise HTTPException(
