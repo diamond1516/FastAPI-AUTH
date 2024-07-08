@@ -1,6 +1,6 @@
 import jwt
 from app.core.config import SETTINGS
-from datetime import datetime, timedelta
+from datetime import datetime
 
 
 async def encode_jwt(
