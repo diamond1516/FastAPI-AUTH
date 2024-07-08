@@ -76,10 +76,12 @@ async def login(
 
 async def get_user_schema(
         user: Union[User, None] = Depends(get_current_user),
-) -> auth.UserSchema:
-    return UserSchema(
-        **user.__dict__
-    )
+) -> Union[UserSchema, None]:
+    if user:
+        return UserSchema(
+            **user.__dict__
+        )
+    return None
 
 
 @api_router.get(
@@ -87,6 +89,6 @@ async def get_user_schema(
     response_model=auth.UserSchema,
 )
 async def user_me(
-        current_user: auth.UserSchema = Depends(get_user_schema)
+        current_user: Union[UserSchema, None] = Depends(get_user_schema)
 ):
-    return current_user
+    return current_user if current_user else None

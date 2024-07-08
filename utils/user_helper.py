@@ -14,16 +14,19 @@ if typing.TYPE_CHECKING:
     from app.models import user as user_models
 
 
-http_bearer = HTTPBearer()
+http_bearer = HTTPBearer(auto_error=False)
 
 
 async def get_current_token_payload(
         credentials: HTTPAuthorizationCredentials = Depends(http_bearer)
-) -> dict:
+) -> Union[dict, None]:
     try:
 
-        payload = await jwt.decode_jwt(credentials.credentials)
-        return payload
+        if credentials:
+            payload = await jwt.decode_jwt(credentials.credentials)
+            return payload
+
+        return None
 
     except ExpiredSignatureError:
 
@@ -41,12 +44,14 @@ async def get_current_token_payload(
 
 
 async def get_current_user(
-        payload: dict = Depends(get_current_token_payload),
+        payload: Union[dict, None] = Depends(get_current_token_payload),
         db: AsyncSession = Depends(get_db)
 ) -> Union['user_models.User', None]:
 
-    result = await db.execute(select(user_models.User).filter(
-        user_models.User.id == payload['sub'], user_models.User.username == payload['username']
-    ))
+    if payload:
+        result = await db.execute(select(user_models.User).filter(
+            user_models.User.id == payload['sub'], user_models.User.username == payload['username']
+        ))
 
-    return result.scalars().first()
+        return result.scalars().first()
+    return None
