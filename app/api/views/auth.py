@@ -1,6 +1,6 @@
 from datetime import datetime
 import asyncio
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.schemas import auth
@@ -22,7 +22,7 @@ api_router = APIRouter(prefix="/auth", tags=["auth"])
 )
 async def signup(
         user_data: auth.SignupSchema = Depends(validators.signup_validator),
-        db: AsyncSession = Depends(get_db)
+        db: AsyncSession = Depends(get_db),
 ):
     new_user = User(**user_data.dict())
     new_user.set_password()
