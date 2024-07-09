@@ -1,5 +1,4 @@
 from datetime import datetime
-import asyncio
 from fastapi import APIRouter, Depends, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 
