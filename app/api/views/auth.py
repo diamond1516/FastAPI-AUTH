@@ -11,7 +11,7 @@ from app.schemas.auth import UserSchema
 from utils import UTILITY, get_current_user, get_user_with_permissions
 from typing import Union
 from utils import validators
-from utils.permissions import IsAuthenticated
+from utils.permissions import IsAuthenticated, IsCodeActive
 
 api_router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -99,6 +99,6 @@ async def user_me(
     '/test/',
 )
 async def test(
-        user=Depends(get_user_with_permissions(IsAuthenticated)),
+        user=Depends(get_user_with_permissions(IsCodeActive)),
 ):
     return {'salom': f'{user.username}'}
