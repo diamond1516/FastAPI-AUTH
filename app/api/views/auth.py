@@ -21,6 +21,7 @@ api_router = APIRouter(prefix="/auth", tags=["auth"])
     response_model=auth.TokenSchema,
 )
 async def signup(
+        background_tasks: BackgroundTasks,
         user_data: auth.SignupSchema = Depends(validators.signup_validator),
         db: AsyncSession = Depends(get_db),
 ):
@@ -36,7 +37,7 @@ async def signup(
     db.add(user_confirmation)
     await db.commit()
 
-    asyncio.create_task(user_confirmation.send_code_to_email())
+    background_tasks.add_task(user_confirmation.send_code_to_email)
 
     token = await new_user.get_token()
 
