@@ -1,6 +1,11 @@
-# from app.db.base import Base
-# from app.db.database import db_helper
-#
+__all__ = (
+    'Base',
+    'db_helper',
+)
+from app.db.base import Base
+from app.db.database import db_helper
+
+
 #
 # async def creat_all():
 #     async with db_helper.engine.begin() as conn:

@@ -5,7 +5,7 @@ from fastapi import HTTPException
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.orm import validates, relationship
 
-from app.core.config import SETTINGS
+from app.core import SETTINGS
 from app.models.base import BaseModel
 from app.models.mixins.user import UserRelationMixin
 from utils import UTILITY, verify_password, hash_password, encode_jwt

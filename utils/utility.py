@@ -3,7 +3,7 @@ import smtplib
 import ssl
 import uuid
 
-from app.core.security import MAIN_SECURITY
+from app.core import MAIN_SECURITY
 from email.message import EmailMessage
 
 

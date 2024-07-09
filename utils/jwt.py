@@ -1,5 +1,5 @@
 import jwt
-from app.core.config import SETTINGS
+from app.core import SETTINGS
 from datetime import datetime
 
 
