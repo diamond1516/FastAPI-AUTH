@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -20,8 +22,20 @@ def get_pagination_params(page: int = Query(1, ge=1),
 
 
 class ItemSchema(BaseModel):
+    id: int
     name: str
     description: str
+
+    class Config:
+        orm_mode = True
+
+
+class PaginatedResponse(BaseModel):
+    items: List[ItemSchema]
+    total_items: int
+    page: int
+    page_size: int
+    total_pages: int
 
 
 async def salom():
@@ -54,17 +68,24 @@ async def get_items(
 
     # Paginatsiya qilingan ma'lumotlarni olish
     offset = (page - 1) * page_size
-    items_query = select(Item).with_only_columns(Item.id).offset(offset).limit(page_size)
+    items_query = select(Item).offset(offset).limit(page_size)
     items = await db.execute(items_query)
     items = items.scalars().all()
 
-    print(items)
-
     # Paginatsiya natijalarini qaytarish
-    return {
-        "items": items,
-        "total_items": total_items,
-        "page": page,
-        "page_size": page_size,
-        "total_pages": (total_items + page_size - 1) // page_size
-    }
+
+    return PaginatedResponse(
+        items=items,
+        total_items=total_items,
+        page=page,
+        page_size=page_size,
+        total_pages=(total_items + page_size - 1) // page_size
+    )
+
+    # return {
+    #     "items": items,
+    #     "total_items": total_items,
+    #     "page": page,
+    #     "page_size": page_size,
+    #     "total_pages": (total_items + page_size - 1) // page_size
+    # }
