@@ -1,5 +1,5 @@
 from datetime import datetime
-
+import asyncio
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -36,7 +36,9 @@ async def signup(
     db.add(user_confirmation)
     await db.commit()
 
-    await user_confirmation.send_code_to_email()
+    # task = asyncio.create_task(user_confirmation.send_code_to_email())
+
+    # await user_confirmation.send_code_to_email()
     token = await new_user.get_token()
 
     return auth.TokenSchema(access_token=token)
