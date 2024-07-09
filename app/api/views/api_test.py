@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List
 
 from fastapi import APIRouter, Depends, Query
@@ -24,10 +25,13 @@ def get_pagination_params(page: int = Query(1, ge=1),
 class ItemSchema(BaseModel):
     id: int
     name: str
-    description: str
+    created_at: datetime
 
     class Config:
         orm_mode = True
+        json_encoders = {
+            datetime: lambda dt: dt.strftime('%Y-%m-%d %H:%M')
+        }
 
 
 class PaginatedResponse(BaseModel):
@@ -38,11 +42,10 @@ class PaginatedResponse(BaseModel):
     total_pages: int
 
 
-async def salom():
-    return "salom"
-
-
-@router.post('/create-item/')
+@router.post(
+    '/create-item/',
+    response_model=PaginatedResponse,
+)
 async def create_item(
         data: ItemSchema,
         db: AsyncSession = Depends(get_db),
