@@ -36,6 +36,10 @@ class ItemSchema(BaseModel):
         d['created_at'] = self.created_at.strftime('%Y-%m-%d %H:%M:%S')
         return d
 
+    def json(self, *args: Any, **kwargs: Any) -> dict:
+        print(1111)
+        return super().json(*args, **kwargs)
+
     class Config:
         orm_mode = True
         json_encoders = {
