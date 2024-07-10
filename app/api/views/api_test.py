@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, Any
 
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import select, func
@@ -31,10 +31,15 @@ class ItemSchema(BaseModel):
     name: str
     created_at: datetime
 
+    def dict(self, *args: Any, **kwargs: Any) -> dict:
+        d = super().dict(*args, **kwargs)
+        d['created_at'] = self.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        return d
+
     class Config:
         orm_mode = True
         json_encoders = {
-            datetime: lambda dt: dt.strftime('%Y-%m-%d %H:%M'),
+            datetime: lambda v: v.strftime('%Y-%m-%d %H:%M:%S')
         }
 
 
