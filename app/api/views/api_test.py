@@ -30,7 +30,7 @@ class ItemSchema(BaseModel):
     class Config:
         orm_mode = True
         json_encoders = {
-            datetime: lambda dt: dt.strftime('%Y-%m-%d %H:%M')
+            datetime: lambda dt: dt.strftime('%Y-%m-%d %H:%M'),
         }
 
 
