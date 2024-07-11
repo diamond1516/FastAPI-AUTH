@@ -4,8 +4,6 @@ from typing import List, Any
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
-from pydantic import Field, validator
 
 from app.models import Item
 from app.api.deps import get_db
