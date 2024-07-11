@@ -12,10 +12,10 @@ from typing import Union
 from utils import validators
 from utils.permissions import IsAuthenticated, IsCodeActive
 
-api_router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-@api_router.post(
+@router.post(
     "/signup/",
     response_model=auth.TokenSchema,
 )
@@ -43,7 +43,7 @@ async def signup(
     return auth.TokenSchema(access_token=token)
 
 
-@api_router.post(
+@router.post(
     '/verify/',
     response_model=auth.TokenSchema,
 )
@@ -59,7 +59,7 @@ async def verify(
     return auth.TokenSchema(access_token=token)
 
 
-@api_router.post(
+@router.post(
     '/login/',
     response_model=auth.TokenSchema,
 )
@@ -86,7 +86,7 @@ async def get_user_schema(
     return None
 
 
-@api_router.get(
+@router.get(
     '/user-me/',
     response_model=auth.UserSchema,
 )
@@ -96,7 +96,7 @@ async def user_me(
     return current_user if current_user else None
 
 
-@api_router.get(
+@router.get(
     '/test/',
 )
 async def test(

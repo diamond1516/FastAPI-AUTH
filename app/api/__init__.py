@@ -2,8 +2,8 @@ __all__ = (
     '__routes__',
 )
 
-from app.core.routes import Routes
-from app.api.views import auth, api_test
+from app.core import Routes
+from app.api.views import api_test_router, auth_router
 
-__routes__ = Routes(routers=(auth.api_router, api_test.router))
+__routes__ = Routes(routers=(api_test_router, auth_router))
 
