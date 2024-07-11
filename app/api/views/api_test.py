@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
+from pydantic import Field, validator
 
 from app.models import Item
 from app.api.deps import get_db
@@ -26,25 +27,29 @@ def get_pagination_params(
     return {"page": page, "page_size": page_size}
 
 
+# created_at_minute_precision = new_product.created_at.replace(second=0, microsecond=0)
+
+
+class FormattedDatetime(datetime):
+
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, value):
+        if isinstance(value, datetime):
+            return value.strftime('%Y-%m-%d %H:%M:%S')
+        raise ValueError("Invalid datetime format")
+
+
 class ItemSchema(BaseModel):
     id: int
     name: str
-    created_at: datetime
-
-    def dict(self, *args: Any, **kwargs: Any) -> dict:
-        d = super().dict(*args, **kwargs)
-        d['created_at'] = self.created_at.strftime('%Y-%m-%d %H:%M:%S')
-        return d
-
-    def json(self, *args: Any, **kwargs: Any) -> dict:
-        print(1111)
-        return super().json(*args, **kwargs)
+    created_at: FormattedDatetime
 
     class Config:
         orm_mode = True
-        json_encoders = {
-            datetime: lambda v: v.strftime('%Y-%m-%d %H:%M:%S')
-        }
 
 
 class PaginatedResponse(BaseModel):
