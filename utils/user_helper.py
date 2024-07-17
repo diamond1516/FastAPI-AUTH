@@ -3,6 +3,8 @@ import typing
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
+
 from utils import jwt
 from app.api.deps import get_db
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -46,9 +48,10 @@ async def get_current_user(
 ) -> Union['user_models.User', None]:
 
     if payload:
-        result = await db.execute(select(user_models.User).filter(
-            user_models.User.id == payload['sub'], user_models.User.username == payload['username']
-        ))
-
+        result = await db.execute(
+            select(user_models.User)
+            .options(selectinload(user_models.User.user_confirmation))
+            .filter(user_models.User.id == payload['sub'], user_models.User.username == payload['username'])
+        )
         return result.scalars().first()
     return None

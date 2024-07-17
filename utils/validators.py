@@ -67,7 +67,6 @@ async def get_user_confirmation(user_id: int, db: AsyncSession):
 async def verify_validator(
         code: int = Form(...),
         user: Union[User, None] = Depends(get_current_user),
-        db: AsyncSession = Depends(get_db)
 ):
     if user is None:
         raise HTTPException(
@@ -75,7 +74,7 @@ async def verify_validator(
             detail="User not found",
         )
 
-    user_confirmation = await get_user_confirmation(user.id, db)
+    user_confirmation = user.user_confirmation
 
     if user_confirmation is None:
         raise HTTPException(
